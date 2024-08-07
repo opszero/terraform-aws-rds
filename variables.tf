@@ -4,42 +4,6 @@ variable "name" {
   description = "Name  (e.g. `app` or `cluster`)."
 }
 
-variable "repository" {
-  type        = string
-  default     = "https://github.com/cypik/terraform-aws-s3"
-  description = "Terraform current module repo"
-}
-
-variable "environment" {
-  type        = string
-  default     = ""
-  description = "Environment (e.g. `prod`, `dev`, `staging`)."
-}
-
-variable "label_order" {
-  type        = list(any)
-  default     = ["name", "environment"]
-  description = "Label order, e.g. `name`,`application`."
-}
-
-variable "managedby" {
-  type        = string
-  default     = "opsZero"
-  description = "ManagedBy, eg 'cypik'."
-}
-
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
-}
-
-variable "enabled" {
-  type        = bool
-  default     = true
-  description = "Whether to create this resource or not?"
-}
-
 variable "identifier" {
   type        = string
   default     = ""
@@ -82,12 +46,6 @@ variable "storage_encrypted" {
   type        = bool
   default     = true
   description = "Specifies whether the DB instance is encrypted"
-}
-
-variable "kms_key_id" {
-  type        = string
-  default     = ""
-  description = "The ARN for the KMS encryption key. If creating an encrypted replica, set this to the destination KMS ARN. If storage_encrypted is set to true and kms_key_id is not specified the default KMS key created in your account will be used"
 }
 
 variable "replicate_source_db" {
@@ -162,12 +120,6 @@ variable "password" {
   description = "Password for the master DB user. Note that this may show up in logs, and it will be stored in the state file"
 }
 
-variable "manage_master_user_password" {
-  type        = bool
-  default     = null
-  description = "Set to true to allow RDS to manage the master user password in Secrets Manager. Cannot be set if password is provided."
-}
-
 variable "port" {
   type        = string
   default     = null
@@ -190,12 +142,6 @@ variable "copy_tags_to_snapshot" {
   type        = bool
   default     = true
   description = "On delete, copy all Instance tags to the final snapshot"
-}
-
-variable "db_subnet_group_name" {
-  type        = string
-  default     = ""
-  description = "Name of DB subnet group. DB instance will be created in the VPC associated with the DB subnet group. If unspecified, will be created in the default VPC"
 }
 
 variable "availability_zone" {
@@ -331,12 +277,6 @@ variable "performance_insights_retention_period" {
   description = "The amount of time in days to retain Performance Insights data. Either 7 (7 days) or 731 (2 years)."
 }
 
-variable "performance_insights_kms_key_id" {
-  type        = string
-  default     = null
-  description = "The ARN for the KMS key to encrypt Performance Insights data."
-}
-
 variable "max_allocated_storage" {
   type        = number
   default     = 0
@@ -433,12 +373,6 @@ variable "subnet_ids" {
   description = "A list of VPC Subnet IDs to launch in."
 }
 
-variable "enabled_db_subnet_group" {
-  type        = bool
-  default     = true
-  description = "A list of enabled db subnet group"
-}
-
 variable "replica_instance_class" {
   type        = string
   default     = ""
@@ -447,14 +381,8 @@ variable "replica_instance_class" {
 
 variable "enabled_read_replica" {
   type        = bool
-  default     = true
-  description = "A list of enabled read replica"
-}
-
-variable "enabled_replica" {
-  type        = bool
   default     = false
-  description = "A list of enabled replica"
+  description = "A list of enabled read replica"
 }
 
 variable "db_subnet_group_tags" {
@@ -463,37 +391,7 @@ variable "db_subnet_group_tags" {
   description = "Additional tags for the DB subnet group"
 }
 
-variable "db_parameter_group_tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags for the  DB parameter group"
-}
-
-variable "db_option_group_tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags for the DB option group"
-}
-
-variable "cloudwatch_log_group_tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags for the cloudwatch log group"
-}
-
-variable "mysql_iam_role_tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags for the mysql iam role"
-}
-
-variable "db_instance_this_tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags for the DB instance"
-}
-
-variable "db_instance_read_tags" {
+variable "tags" {
   type        = map(any)
   default     = {}
   description = "Additional tags for the DB instance"
@@ -566,67 +464,16 @@ variable "sg_ingress_description" {
   description = "Description of the ingress rule"
 }
 
-variable "protocol" {
-  type        = string
-  default     = "tcp"
-  description = "The protocol. If not icmp, tcp, udp, or all use the."
-}
-
-variable "kms_key_enabled" {
-  type        = bool
-  default     = true
-  description = "Specifies whether the kms is enabled or disabled."
-}
-
-variable "kms_description" {
-  type        = string
-  default     = "Parameter Store KMS master key"
-  description = "The description of the key as viewed in AWS console."
-}
-
-variable "key_usage" {
-  type        = string
-  default     = "ENCRYPT_DECRYPT"
-  sensitive   = true
-  description = "Specifies the intended use of the key. Defaults to ENCRYPT_DECRYPT, and only symmetric encryption and decryption are supported."
-}
-
 variable "deletion_window_in_days" {
   type        = number
   default     = 7
   description = "Duration in days after which the key is deleted after destruction of the resource."
 }
 
-variable "is_enabled" {
-  type        = bool
-  default     = true
-  description = "Specifies whether the key is enabled."
-}
-
 variable "enable_key_rotation" {
   type        = string
   default     = true
   description = "Specifies whether key rotation is enabled."
-}
-
-variable "customer_master_key_spec" {
-  type        = string
-  default     = "SYMMETRIC_DEFAULT"
-  sensitive   = true
-  description = "Specifies whether the key contains a symmetric key or an asymmetric key pair and the encryption algorithms or signing algorithms that the key supports. Valid values: SYMMETRIC_DEFAULT, RSA_2048, RSA_3072, RSA_4096, ECC_NIST_P256, ECC_NIST_P384, ECC_NIST_P521, or ECC_SECG_P256K1. Defaults to SYMMETRIC_DEFAULT."
-
-}
-
-variable "kms_multi_region" {
-  type        = bool
-  default     = false
-  description = "Indicates whether the KMS key is a multi-Region (true) or regional (false) key."
-}
-
-variable "alias" {
-  type        = string
-  default     = "alias/rds"
-  description = "The display name of the alias. The name must start with the word `alias` followed by a forward slash."
 }
 
 variable "ssm_parameter_description" {

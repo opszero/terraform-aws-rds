@@ -41,10 +41,9 @@ module "oracle" {
   storage_encrypted = true
   family            = "oracle-ee-19"
 
-  db_name                     = "test"
-  username                    = "admin"
-  manage_master_user_password = true
-  port                        = "1521"
+  db_name  = "test"
+  username = "admin"
+  port     = "1521"
 
   maintenance_window = "Mon:00:00-Mon:03:00"
   backup_window      = "03:00-06:00"

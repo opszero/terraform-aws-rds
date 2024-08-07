@@ -43,10 +43,9 @@ module "postgresql" {
   storage_encrypted = true
   family            = "postgres14"
 
-  db_name                     = "test"
-  username                    = "dbname"
-  manage_master_user_password = true
-  port                        = "5432"
+  db_name  = "test"
+  username = "dbname"
+  port     = "5432"
 
   maintenance_window = "Mon:00:00-Mon:03:00"
   backup_window      = "03:00-06:00"

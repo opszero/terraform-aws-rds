@@ -1,24 +1,8 @@
-module "labels" {
-  source      = "git::https://github.com/cypik/terraform-aws-labels.git?ref=v1.0.0"
-  name        = var.name
-  environment = var.environment
-  managedby   = var.managedby
-  label_order = var.label_order
-  repository  = var.repository
-}
-
-resource "random_id" "password" {
-  count       = var.enabled ? 1 : 0
-  byte_length = 20
-}
-
 locals {
 
   identifier_prefix    = var.use_identifier_prefix ? "${var.identifier}-" : null
-  db_subnet_group_name = var.enabled_db_subnet_group ? join("", aws_db_subnet_group.this[*].id) : var.db_subnet_group_name
+  db_subnet_group_name = aws_db_subnet_group.this.id
 
-  username       = var.replicate_source_db != null ? null : var.username
-  password       = var.password == "" ? join("", random_id.password[*].b64_url) : var.password
   engine         = var.replicate_source_db != null ? null : var.engine
   engine_version = var.replicate_source_db != null ? null : var.engine_version
   //  name_prefix = var.use_name_prefix ? "${var.name}-" : null
@@ -26,7 +10,7 @@ locals {
 }
 
 resource "random_id" "snapshot_identifier" {
-  count = var.enabled && !var.skip_final_snapshot ? 1 : 0
+  count = !var.skip_final_snapshot ? 1 : 0
 
   keepers = {
     id = var.identifier
@@ -36,20 +20,14 @@ resource "random_id" "snapshot_identifier" {
 }
 
 resource "aws_db_subnet_group" "this" {
-  count       = var.enabled && var.enabled_db_subnet_group ? 1 : 0
-  name        = module.labels.id
+  name        = var.name
   description = local.description
   subnet_ids  = var.subnet_ids
-  tags = merge(
-    module.labels.tags,
-    var.db_subnet_group_tags
-  )
+  tags        = var.tags
 }
 
 resource "aws_db_parameter_group" "this" {
-  count = var.enabled ? 1 : 0
-
-  name        = module.labels.id
+  name        = var.name
   description = local.description
   family      = var.family
   dynamic "parameter" {
@@ -60,13 +38,7 @@ resource "aws_db_parameter_group" "this" {
       apply_method = lookup(parameter.value, "apply_method", null)
     }
   }
-  tags = merge(
-    module.labels.tags,
-    var.db_parameter_group_tags,
-    {
-      "Name" = format("%s%sparameter", module.labels.id, var.delimiter)
-    }
-  )
+  tags = var.tags
   lifecycle {
     create_before_destroy = true
   }
@@ -74,9 +46,7 @@ resource "aws_db_parameter_group" "this" {
 
 
 resource "aws_db_option_group" "this" {
-  count = var.enabled ? 1 : 0
-
-  name                     = module.labels.id
+  name                     = var.name
   option_group_description = local.description
   engine_name              = var.engine_name
   major_engine_version     = var.major_engine_version
@@ -98,13 +68,7 @@ resource "aws_db_option_group" "this" {
     }
   }
 
-  tags = merge(
-    module.labels.tags,
-    var.db_option_group_tags,
-    {
-      "Name" = format("%s%soption-group", module.labels.id, var.delimiter)
-    }
-  )
+  tags = var.tags
 
   timeouts {
     delete = lookup(var.timeouts, "delete", null)
@@ -116,16 +80,12 @@ resource "aws_db_option_group" "this" {
 }
 
 resource "aws_cloudwatch_log_group" "this" {
-  for_each = toset([for log in var.enabled_cloudwatch_logs_exports : log if var.enabled && var.enabled_cloudwatch_log_group && !var.use_identifier_prefix])
+  for_each = toset([for log in var.enabled_cloudwatch_logs_exports : log if var.enabled_cloudwatch_log_group && !var.use_identifier_prefix])
 
-  name              = "/aws/rds/instance/${module.labels.id}/${each.value}"
+  name              = "/aws/rds/instance/${var.name}/${each.value}"
   retention_in_days = var.cloudwatch_log_group_retention_in_days
-  kms_key_id        = var.kms_key_id == "" ? join("", aws_kms_key.default[*].arn) : var.kms_key_id
 
-  tags = merge(
-    module.labels.tags,
-    var.cloudwatch_log_group_tags
-  )
+  tags = var.tags
 }
 
 data "aws_iam_policy_document" "enhanced_monitoring" {
@@ -144,18 +104,12 @@ data "aws_iam_policy_document" "enhanced_monitoring" {
 resource "aws_iam_role" "enhanced_monitoring" {
   count = var.enabled_monitoring_role ? 1 : 0
 
-  name                 = module.labels.id
+  name                 = var.name
   assume_role_policy   = data.aws_iam_policy_document.enhanced_monitoring.json
   description          = var.monitoring_role_description
   permissions_boundary = var.monitoring_role_permissions_boundary
 
-  tags = merge(
-    {
-      "Name" = format("%s", var.monitoring_role_name)
-    },
-    module.labels.tags,
-    var.mysql_iam_role_tags
-  )
+  tags = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "enhanced_monitoring" {
@@ -168,10 +122,10 @@ resource "aws_iam_role_policy_attachment" "enhanced_monitoring" {
 resource "aws_security_group" "default" {
   count = var.enable_security_group && length(var.sg_ids) < 1 ? 1 : 0
 
-  name        = format("%s-sg-%s", module.labels.id, local.engine)
+  name        = var.name
   vpc_id      = var.vpc_id
   description = var.sg_description
-  tags        = module.labels.tags
+  tags        = var.tags
   lifecycle {
     create_before_destroy = true
   }
@@ -210,30 +164,9 @@ resource "aws_security_group_rule" "ingress" {
   type              = "ingress"
   from_port         = element(var.allowed_ports, count.index)
   to_port           = element(var.allowed_ports, count.index)
-  protocol          = var.protocol
+  protocol          = "all"
   cidr_blocks       = var.allowed_ip
   security_group_id = join("", aws_security_group.default[*].id)
-}
-
-resource "aws_kms_key" "default" {
-  count = var.kms_key_enabled && var.kms_key_id == "" ? 1 : 0
-
-  description              = var.kms_description
-  key_usage                = var.key_usage
-  deletion_window_in_days  = var.deletion_window_in_days
-  is_enabled               = var.is_enabled
-  enable_key_rotation      = var.enable_key_rotation
-  customer_master_key_spec = var.customer_master_key_spec
-  policy                   = data.aws_iam_policy_document.default.json
-  multi_region             = var.kms_multi_region
-  tags                     = module.labels.tags
-}
-
-resource "aws_kms_alias" "default" {
-  count = var.kms_key_enabled && var.kms_key_id == "" ? 1 : 0
-
-  name          = coalesce(var.alias, format("alias/%v", module.labels.id))
-  target_key_id = var.kms_key_id == "" ? join("", aws_kms_key.default[*].id) : var.kms_key_id
 }
 
 data "aws_partition" "current" {}
@@ -259,8 +192,7 @@ data "aws_iam_policy_document" "default" {
 }
 
 resource "aws_db_instance" "this" {
-  count             = var.enabled && var.enabled_read_replica ? 1 : 0
-  identifier        = format("%s-%s", module.labels.id, local.engine)
+  identifier        = var.name
   identifier_prefix = local.identifier_prefix
 
   engine            = local.engine
@@ -268,14 +200,12 @@ resource "aws_db_instance" "this" {
   instance_class    = var.instance_class
   allocated_storage = var.allocated_storage
   storage_type      = var.storage_type
-  storage_encrypted = var.storage_encrypted
-  kms_key_id        = var.kms_key_id == "" ? join("", aws_kms_key.default[*].arn) : var.kms_key_id
+  storage_encrypted = true
   license_model     = var.license_model
 
   db_name                             = var.db_name
-  username                            = local.username
-  password                            = var.manage_master_user_password != null ? null : local.password
-  manage_master_user_password         = var.manage_master_user_password
+  username                            = "opszero"
+  manage_master_user_password         = true
   port                                = var.port
   domain                              = var.domain
   domain_iam_role_name                = var.domain_iam_role_name
@@ -285,8 +215,8 @@ resource "aws_db_instance" "this" {
 
   vpc_security_group_ids = length(var.sg_ids) < 1 ? aws_security_group.default[*].id : var.sg_ids
   db_subnet_group_name   = local.db_subnet_group_name
-  parameter_group_name   = join("", aws_db_parameter_group.this[*].name)
-  option_group_name      = join("", aws_db_option_group.this[*].name)
+  parameter_group_name   = aws_db_parameter_group.this.name
+  option_group_name      = aws_db_option_group.this.name
   network_type           = var.network_type
 
   availability_zone   = var.availability_zone
@@ -313,12 +243,11 @@ resource "aws_db_instance" "this" {
   snapshot_identifier       = var.snapshot_identifier
   copy_tags_to_snapshot     = var.copy_tags_to_snapshot
   skip_final_snapshot       = var.skip_final_snapshot
-  final_snapshot_identifier = module.labels.id
+  final_snapshot_identifier = var.name
 
   #tfsec:ignore:aws-rds-enable-performance-insights
   performance_insights_enabled          = var.performance_insights_enabled
   performance_insights_retention_period = var.performance_insights_enabled ? var.performance_insights_retention_period : null
-  performance_insights_kms_key_id       = var.performance_insights_enabled ? var.performance_insights_kms_key_id : null
 
   replica_mode            = var.replica_mode
   backup_retention_period = length(var.blue_green_update) > 0 ? coalesce(var.backup_retention_period, 1) : var.backup_retention_period
@@ -358,10 +287,7 @@ resource "aws_db_instance" "this" {
     }
   }
 
-  tags = merge(
-    module.labels.tags,
-    var.db_instance_this_tags
-  )
+  tags = var.tags
 
   depends_on = [aws_cloudwatch_log_group.this]
 
@@ -374,9 +300,9 @@ resource "aws_db_instance" "this" {
 }
 
 resource "aws_db_instance" "read" {
-  count = var.enabled && var.enabled_read_replica && var.enabled_replica ? 1 : 0
+  count = var.enabled_read_replica ? 1 : 0
 
-  identifier        = format("%s-replica", module.labels.id)
+  identifier        = format("%s-replica", var.name)
   identifier_prefix = local.identifier_prefix
 
   engine            = null
@@ -385,12 +311,9 @@ resource "aws_db_instance" "read" {
   allocated_storage = var.allocated_storage
   storage_type      = var.storage_type
   storage_encrypted = var.storage_encrypted
-  kms_key_id        = var.kms_key_id == "" ? join("", aws_kms_key.default[*].arn) : var.kms_key_id
   license_model     = var.license_model
 
   db_name                             = null
-  username                            = null
-  password                            = local.password
   port                                = var.port
   domain                              = var.domain
   domain_iam_role_name                = var.domain_iam_role_name
@@ -398,9 +321,9 @@ resource "aws_db_instance" "read" {
   custom_iam_instance_profile         = var.custom_iam_instance_profile
 
   vpc_security_group_ids = length(var.sg_ids) < 1 ? aws_security_group.default[*].id : var.sg_ids
-  db_subnet_group_name   = var.db_subnet_group_name
-  parameter_group_name   = join("", aws_db_instance.this[*].parameter_group_name)
-  option_group_name      = join("", aws_db_instance.this[*].option_group_name)
+  db_subnet_group_name   = aws_db_subnet_group.this.id
+  parameter_group_name   = aws_db_instance.this.parameter_group_name
+  option_group_name      = aws_db_instance.this.option_group_name
   network_type           = var.network_type
 
   availability_zone   = var.availability_zone
@@ -426,11 +349,10 @@ resource "aws_db_instance" "read" {
   snapshot_identifier       = var.snapshot_identifier
   copy_tags_to_snapshot     = var.copy_tags_to_snapshot
   skip_final_snapshot       = var.skip_final_snapshot
-  final_snapshot_identifier = module.labels.id
+  final_snapshot_identifier = var.name
 
   performance_insights_enabled          = var.performance_insights_enabled
   performance_insights_retention_period = var.performance_insights_enabled ? var.performance_insights_retention_period : null
-  performance_insights_kms_key_id       = var.performance_insights_enabled ? var.performance_insights_kms_key_id : null
 
   replicate_source_db     = join("", aws_db_instance.this[*].identifier)
   replica_mode            = var.replica_mode
@@ -471,10 +393,7 @@ resource "aws_db_instance" "read" {
     }
   }
 
-  tags = merge(
-    module.labels.tags,
-    var.db_instance_read_tags
-  )
+  tags = var.tags
 
   depends_on = [aws_cloudwatch_log_group.this]
 
@@ -486,11 +405,10 @@ resource "aws_db_instance" "read" {
 }
 
 resource "aws_ssm_parameter" "secret-endpoint" {
-  count = var.enabled && var.ssm_parameter_endpoint_enabled ? 1 : 0
+  count = var.ssm_parameter_endpoint_enabled ? 1 : 0
 
-  name        = format("/%s/%s/endpoint", var.environment, var.name)
+  name        = format("/rds/%s/endpoint", var.name)
   description = var.ssm_parameter_description
   type        = var.ssm_parameter_type
   value       = join("", aws_db_instance.this[*].endpoint)
-  key_id      = var.kms_key_id == "" ? join("", aws_kms_key.default[*].arn) : var.kms_key_id
 }

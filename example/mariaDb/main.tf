@@ -38,10 +38,9 @@ module "mariadb" {
   engine_name       = "MariaDB"
   allocated_storage = 50
 
-  db_name                     = "test"
-  username                    = "user"
-  manage_master_user_password = true
-  port                        = "3306"
+  db_name  = "test"
+  username = "user"
+  port     = "3306"
 
   maintenance_window = "Mon:00:00-Mon:03:00"
   backup_window      = "03:00-06:00"
