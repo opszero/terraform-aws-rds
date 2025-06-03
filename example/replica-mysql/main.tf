@@ -35,7 +35,7 @@ module "mysql" {
   label_order            = ["environment", "name"]
   enabled                = true
   engine                 = "mysql"
-  engine_version         = "8.0"
+  engine_version         = "8.0.40"
   instance_class         = "db.t4g.micro"
   replica_instance_class = "db.t4g.micro"
   allocated_storage      = 16

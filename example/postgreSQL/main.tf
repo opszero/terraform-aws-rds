@@ -37,7 +37,7 @@ module "postgresql" {
   label_order = ["environment", "name"]
 
   engine            = "postgres"
-  engine_version    = "16.3-R3"
+  engine_version    = "17.5-R1"
   instance_class    = "db.t4g.micro"
   allocated_storage = 16
   engine_name       = "postgres"

@@ -34,7 +34,7 @@ module "mysql" {
   label_order = ["environment", "name"]
 
   engine            = "mysql"
-  engine_version    = "8.0.39"
+  engine_version    = "8.0.40"
   instance_class    = "db.t4g.micro"
   allocated_storage = 16
   vpc_id            = module.vpc.vpc_id

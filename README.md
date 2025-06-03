@@ -22,15 +22,15 @@ To use this module, you can include it in your Terraform configuration. Here's a
 
 ```hcl
 module "mariadb" {
-  source                          = "cypik/db/aws"
-  version                         = "1.0.2"
+  source      = "cypik/db/aws"
+  version     = "1.0.2"
 
   name        = "mariadb"
   environment = "test22"
   label_order = ["environment", "name"]
 
   engine            = "MariaDB"
-  engine_version    = "10.11.9" # Replace with an available version
+  engine_version    = "11.4.5"
   instance_class    = "db.t4g.micro"
   engine_name       = "MariaDB"
   allocated_storage = 16
@@ -75,7 +75,7 @@ module "mysql" {
   label_order = ["environment", "name"]
 
   engine            = "mysql"
-  engine_version    = "8.0.39"
+  engine_version    = "8.0.40"
   instance_class    = "db.t4g.micro"
   allocated_storage = 16
   vpc_id        = module.vpc.id
@@ -191,7 +191,7 @@ module "postgresql" {
   label_order = ["environment", "name"]
 
   engine            = "postgres"
-  engine_version    = "16.3-R3"
+  engine_version    = "17.5-R1"
   instance_class    = "db.t4g.micro"
   allocated_storage = 16
   engine_name       = "postgres"
@@ -229,15 +229,14 @@ module "postgresql" {
 ## Example: replica-mysql
 ```hcl
 module "mysql" {
-  source                          = "cypik/db/aws"
-  version                         = "1.0.2"
-
+  source                 = "cypik/db/aws"
+  version                = "1.0.2"
   name                   = "rds"
   environment            = "test"
   label_order            = ["environment", "name"]
   enabled                = true
   engine                 = "mysql"
-  engine_version         = "8.0"
+  engine_version         = "8.0.40"
   instance_class         = "db.t4g.micro"
   replica_instance_class = "db.t4g.micro"
   allocated_storage      = 16

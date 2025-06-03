@@ -35,7 +35,7 @@ module "mariadb" {
   label_order = ["environment", "name"]
 
   engine            = "MariaDB"
-  engine_version    = "10.11.9" # Replace with an available version
+  engine_version    = "11.4.5"
   instance_class    = "db.t4g.micro"
   engine_name       = "MariaDB"
   allocated_storage = 16
