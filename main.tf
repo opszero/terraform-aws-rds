@@ -519,10 +519,10 @@ resource "aws_ssm_parameter" "secret-endpoint" {
   key_id      = var.kms_key_id == "" ? join("", aws_kms_key.default[*].arn) : var.kms_key_id
 
   # Optional arguments added
-  allowed_pattern = var.ssm_parameter_allowed_pattern # Validate the parameter value against a regex pattern
-  data_type       = var.ssm_parameter_data_type       # Set the parameter's data type (e.g., text, aws:ssm:integration)
-  insecure_value  = null                              # Use null for SecureString types to avoid insecure configurations
-  #  overwrite       = true                              # Overwrite the parameter if it exists
-  tags = var.ssm_parameter_tags # Assign tags to the parameter
-  tier = var.ssm_parameter_tier # Specify the parameter tier (Standard, Advanced, Intelligent-Tiering)
+  allowed_pattern = var.ssm_parameter_allowed_pattern
+  data_type       = var.ssm_parameter_data_type
+  insecure_value  = null
+  #  overwrite       = true
+  tags = var.ssm_parameter_tags
+  tier = var.ssm_parameter_tier
 }

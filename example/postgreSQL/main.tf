@@ -32,10 +32,9 @@ module "private_subnets" {
 module "postgresql" {
   source = "./../../"
 
-  name        = "postgresql"
-  environment = "test"
-  label_order = ["environment", "name"]
-
+  name              = "postgresql"
+  environment       = "test"
+  label_order       = ["environment", "name"]
   engine            = "postgres"
   engine_version    = "17.5-R1"
   instance_class    = "db.t4g.micro"

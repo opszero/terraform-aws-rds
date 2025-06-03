@@ -30,10 +30,9 @@ module "private_subnets" {
 module "mariadb" {
   source = "../../"
 
-  name        = "mariadb"
-  environment = "test22"
-  label_order = ["environment", "name"]
-
+  name              = "mariadb"
+  environment       = "test22"
+  label_order       = ["environment", "name"]
   engine            = "MariaDB"
   engine_version    = "11.4.5"
   instance_class    = "db.t4g.micro"

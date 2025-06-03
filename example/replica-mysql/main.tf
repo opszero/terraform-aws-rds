@@ -28,8 +28,7 @@ module "subnets" {
 }
 
 module "mysql" {
-  source = "../../"
-
+  source                 = "../../"
   name                   = "rds"
   environment            = "test"
   label_order            = ["environment", "name"]

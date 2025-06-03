@@ -31,10 +31,9 @@ module "private_subnets" {
 module "oracle" {
   source = "../../"
 
-  name        = "oracle"
-  environment = "test"
-  label_order = ["environment", "name"]
-
+  name              = "oracle"
+  environment       = "test"
+  label_order       = ["environment", "name"]
   engine            = "oracle-ee"
   engine_version    = "19"
   instance_class    = "db.m5.large"
