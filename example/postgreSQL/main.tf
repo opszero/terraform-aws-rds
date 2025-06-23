@@ -1,28 +1,27 @@
 provider "aws" {
-  region = "eu-west-1"
+  region = "us-east-2"
 }
 
 module "vpc" {
   source      = "cypik/vpc/aws"
-  version     = "1.0.1"
+  version     = "1.0.2"
   name        = "vpc"
   environment = "test"
   label_order = ["environment", "name"]
-
-  cidr_block = "10.0.0.0/16"
+  cidr_block  = "10.0.0.0/16"
 }
 
 module "private_subnets" {
   source      = "cypik/subnet/aws"
-  version     = "1.0.1"
+  version     = "1.0.3"
   name        = "subnets"
   environment = "test"
   label_order = ["name", "environment"]
 
   nat_gateway_enabled = true
 
-  availability_zones = ["eu-west-1a", "eu-west-1b"]
-  vpc_id             = module.vpc.id
+  availability_zones = ["us-east-2a", "us-east-2b"]
+  vpc_id             = module.vpc.vpc_id
   type               = "public-private"
   igw_id             = module.vpc.igw_id
   cidr_block         = module.vpc.vpc_cidr_block
@@ -33,14 +32,13 @@ module "private_subnets" {
 module "postgresql" {
   source = "./../../"
 
-  name        = "postgresql"
-  environment = "test"
-  label_order = ["environment", "name"]
-
+  name              = "postgresql"
+  environment       = "test"
+  label_order       = ["environment", "name"]
   engine            = "postgres"
-  engine_version    = "14.6"
-  instance_class    = "db.t3.medium"
-  allocated_storage = 50
+  engine_version    = "17.5-R1"
+  instance_class    = "db.t4g.micro"
+  allocated_storage = 16
   engine_name       = "postgres"
   storage_encrypted = true
   family            = "postgres14"
@@ -55,7 +53,7 @@ module "postgresql" {
   multi_az           = false
 
 
-  vpc_id        = module.vpc.id
+  vpc_id        = module.vpc.vpc_id
   allowed_ip    = [module.vpc.vpc_cidr_block]
   allowed_ports = [5432]
 
@@ -66,11 +64,9 @@ module "postgresql" {
   subnet_ids          = module.private_subnets.public_subnet_id
   publicly_accessible = true
 
-  major_engine_version = "14"
+  major_engine_version = "16.3"
 
   deletion_protection = true
 
-
   ssm_parameter_endpoint_enabled = true
-
 }

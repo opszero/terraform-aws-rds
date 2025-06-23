@@ -141,3 +141,34 @@ output "replica_db_instance_cloudwatch_log_groups" {
   value       = module.mysql.db_instance_cloudwatch_log_groups
 
 }
+
+output "kms_key_policy" {
+  description = "Policy associated with the KMS key."
+  value       = module.mysql.kms_key_policy
+}
+
+output "kms_key_rotation_enabled" {
+  description = "Indicates whether key rotation is enabled."
+  value       = module.mysql.kms_key_rotation_enabled
+}
+
+output "kms_key_multi_region" {
+  description = "Indicates whether the key is a multi-Region key."
+  value       = module.mysql.kms_key_multi_region
+}
+
+output "ssm_parameter_name" {
+  value       = module.mysql.ssm_parameter_name
+  description = "The name of the SSM parameter created."
+}
+
+output "ssm_parameter_arn" {
+  value       = module.mysql.ssm_parameter_arn
+  description = "The ARN of the SSM parameter created."
+}
+
+output "ssm_parameter_value" {
+  value       = module.mysql.ssm_parameter_value
+  description = "The value of the SSM parameter created."
+  sensitive   = true # Mark as sensitive to avoid exposing secrets in outputs
+}

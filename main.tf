@@ -1,6 +1,6 @@
 module "labels" {
   source      = "cypik/labels/aws"
-  version     = "1.0.1"
+  version     = "1.0.2"
   name        = var.name
   environment = var.environment
   managedby   = var.managedby
@@ -73,10 +73,8 @@ resource "aws_db_parameter_group" "this" {
   }
 }
 
-
 resource "aws_db_option_group" "this" {
-  count = var.enabled ? 1 : 0
-
+  count                    = var.enabled ? 1 : 0
   name                     = module.labels.id
   option_group_description = local.description
   engine_name              = var.engine_name
@@ -127,6 +125,8 @@ resource "aws_cloudwatch_log_group" "this" {
     module.labels.tags,
     var.cloudwatch_log_group_tags
   )
+  skip_destroy    = var.skip_destroy    # Ensures log group is not deleted at destroy time
+  log_group_class = var.log_group_class # Allows specifying log group class, e.g., STANDARD or INFREQUENT_ACCESS
 }
 
 data "aws_iam_policy_document" "enhanced_monitoring" {
@@ -145,10 +145,13 @@ data "aws_iam_policy_document" "enhanced_monitoring" {
 resource "aws_iam_role" "enhanced_monitoring" {
   count = var.enabled_monitoring_role ? 1 : 0
 
-  name                 = module.labels.id
-  assume_role_policy   = data.aws_iam_policy_document.enhanced_monitoring.json
-  description          = var.monitoring_role_description
-  permissions_boundary = var.monitoring_role_permissions_boundary
+  name                  = module.labels.id
+  assume_role_policy    = data.aws_iam_policy_document.enhanced_monitoring.json
+  description           = var.monitoring_role_description
+  permissions_boundary  = var.monitoring_role_permissions_boundary
+  path                  = var.monitoring_role_path
+  max_session_duration  = var.monitoring_role_max_session_duration
+  force_detach_policies = var.force_detach_policies
 
   tags = merge(
     {
@@ -158,6 +161,24 @@ resource "aws_iam_role" "enhanced_monitoring" {
     var.mysql_iam_role_tags
   )
 }
+
+# Optional Inline Policies (if any)
+resource "aws_iam_role_policy" "inline_policies" {
+  for_each = var.inline_policies
+
+  role   = aws_iam_role.enhanced_monitoring[0].name
+  name   = each.key
+  policy = each.value
+}
+
+# Managed Policy Attachments (if any)
+resource "aws_iam_role_policy_attachment" "managed_policies" {
+  for_each = toset(var.managed_policy_arns)
+
+  role       = aws_iam_role.enhanced_monitoring[0].name
+  policy_arn = each.value
+}
+
 
 resource "aws_iam_role_policy_attachment" "enhanced_monitoring" {
   count = var.enabled_monitoring_role ? 1 : 0
@@ -219,15 +240,18 @@ resource "aws_security_group_rule" "ingress" {
 resource "aws_kms_key" "default" {
   count = var.kms_key_enabled && var.kms_key_id == "" ? 1 : 0
 
-  description              = var.kms_description
-  key_usage                = var.key_usage
-  deletion_window_in_days  = var.deletion_window_in_days
-  is_enabled               = var.is_enabled
-  enable_key_rotation      = var.enable_key_rotation
-  customer_master_key_spec = var.customer_master_key_spec
-  policy                   = data.aws_iam_policy_document.default.json
-  multi_region             = var.kms_multi_region
-  tags                     = module.labels.tags
+  description                        = var.kms_description
+  key_usage                          = var.key_usage
+  deletion_window_in_days            = var.deletion_window_in_days
+  is_enabled                         = var.is_enabled
+  enable_key_rotation                = var.enable_key_rotation
+  rotation_period_in_days            = var.rotation_period_in_days
+  customer_master_key_spec           = var.customer_master_key_spec
+  bypass_policy_lockout_safety_check = var.bypass_policy_lockout_safety_check
+  custom_key_store_id                = var.custom_key_store_id
+  multi_region                       = var.kms_multi_region
+  policy                             = data.aws_iam_policy_document.default.json
+  tags                               = module.labels.tags
 }
 
 resource "aws_kms_alias" "default" {
@@ -261,7 +285,7 @@ data "aws_iam_policy_document" "default" {
 
 resource "aws_db_instance" "this" {
   count             = var.enabled && var.enabled_read_replica ? 1 : 0
-  identifier        = format("%s-%s", module.labels.id, local.engine)
+  identifier        = format("%s-%s", lower(module.labels.id), lower(local.engine))
   identifier_prefix = local.identifier_prefix
 
   engine            = local.engine
@@ -493,4 +517,12 @@ resource "aws_ssm_parameter" "secret-endpoint" {
   type        = var.ssm_parameter_type
   value       = join("", aws_db_instance.this[*].endpoint)
   key_id      = var.kms_key_id == "" ? join("", aws_kms_key.default[*].arn) : var.kms_key_id
+
+  # Optional arguments added
+  allowed_pattern = var.ssm_parameter_allowed_pattern
+  data_type       = var.ssm_parameter_data_type
+  insecure_value  = null
+  #  overwrite       = true
+  tags = var.ssm_parameter_tags
+  tier = var.ssm_parameter_tier
 }

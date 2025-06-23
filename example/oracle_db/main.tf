@@ -1,10 +1,10 @@
 provider "aws" {
-  region = "eu-west-1"
+  region = "us-east-2"
 }
 
 module "vpc" {
   source      = "cypik/vpc/aws"
-  version     = "1.0.1"
+  version     = "1.0.2"
   name        = "vpc"
   environment = "test"
   label_order = ["environment", "name"]
@@ -14,13 +14,13 @@ module "vpc" {
 
 module "private_subnets" {
   source              = "cypik/subnet/aws"
-  version             = "1.0.1"
+  version             = "1.0.3"
   name                = "subnets"
   environment         = "test"
   label_order         = ["name", "environment"]
   nat_gateway_enabled = true
-  availability_zones  = ["eu-west-1a", "eu-west-1b"]
-  vpc_id              = module.vpc.id
+  availability_zones  = ["us-east-2a", "us-east-2b"]
+  vpc_id              = module.vpc.vpc_id
   type                = "public-private"
   igw_id              = module.vpc.igw_id
   cidr_block          = module.vpc.vpc_cidr_block
@@ -31,15 +31,14 @@ module "private_subnets" {
 module "oracle" {
   source = "../../"
 
-  name        = "oracle"
-  environment = "test"
-  label_order = ["environment", "name"]
-
+  name              = "oracle"
+  environment       = "test"
+  label_order       = ["environment", "name"]
   engine            = "oracle-ee"
   engine_version    = "19"
-  instance_class    = "db.t3.medium"
+  instance_class    = "db.m5.large"
   engine_name       = "oracle-ee"
-  allocated_storage = 50
+  allocated_storage = 16
   storage_encrypted = true
   family            = "oracle-ee-19"
 
@@ -53,7 +52,7 @@ module "oracle" {
   multi_az           = false
 
 
-  vpc_id        = module.vpc.id
+  vpc_id        = module.vpc.vpc_id
   allowed_ip    = [module.vpc.vpc_cidr_block]
   allowed_ports = [1521]
 
@@ -70,5 +69,4 @@ module "oracle" {
   iam_database_authentication_enabled = false
 
   ssm_parameter_endpoint_enabled = true
-
 }

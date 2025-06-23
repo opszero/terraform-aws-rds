@@ -1,10 +1,10 @@
 provider "aws" {
-  region = "eu-west-1"
+  region = "us-east-2"
 }
 
 module "vpc" {
   source      = "cypik/vpc/aws"
-  version     = "1.0.1"
+  version     = "1.0.2"
   name        = "vpc"
   environment = "test"
   label_order = ["environment", "name"]
@@ -14,13 +14,13 @@ module "vpc" {
 
 module "subnets" {
   source      = "cypik/subnet/aws"
-  version     = "1.0.1"
+  version     = "1.0.3"
   name        = "subnets"
   environment = "test"
   label_order = ["environment", "name"]
 
-  availability_zones = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  vpc_id             = module.vpc.id
+  availability_zones = ["us-east-2a", "us-east-2b", "us-east-2c"]
+  vpc_id             = module.vpc.vpc_id
   type               = "public"
   igw_id             = module.vpc.igw_id
   cidr_block         = module.vpc.vpc_cidr_block
@@ -28,17 +28,16 @@ module "subnets" {
 }
 
 module "mysql" {
-  source = "../../"
-
+  source                 = "../../"
   name                   = "rds"
   environment            = "test"
   label_order            = ["environment", "name"]
   enabled                = true
   engine                 = "mysql"
-  engine_version         = "8.0"
-  instance_class         = "db.t4g.large"
-  replica_instance_class = "db.t4g.large"
-  allocated_storage      = 20
+  engine_version         = "8.0.40"
+  instance_class         = "db.t4g.micro"
+  replica_instance_class = "db.t4g.micro"
+  allocated_storage      = 16
   identifier             = ""
   snapshot_identifier    = ""
   kms_key_id             = ""
@@ -54,7 +53,7 @@ module "mysql" {
   backup_window      = "03:00-06:00"
   multi_az           = true
 
-  vpc_id        = module.vpc.id
+  vpc_id        = module.vpc.vpc_id
   allowed_ip    = [module.vpc.vpc_cidr_block]
   allowed_ports = [3306]
 

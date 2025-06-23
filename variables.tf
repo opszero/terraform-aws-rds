@@ -24,8 +24,8 @@ variable "label_order" {
 
 variable "managedby" {
   type        = string
-  default     = "cypik"
-  description = "ManagedBy, eg 'cypik'."
+  default     = "info@cypik.com"
+  description = "ManagedBy, eg 'info@cypik.com'."
 }
 
 variable "delimiter" {
@@ -639,4 +639,88 @@ variable "ssm_parameter_endpoint_enabled" {
   type        = bool
   default     = false
   description = "Name of the parameter."
+}
+
+variable "skip_destroy" {
+  description = "Set to true to prevent log group deletion during destroy."
+  type        = bool
+  default     = false
+}
+
+variable "log_group_class" {
+  type        = string
+  default     = "STANDARD"
+  description = "Specifies the log class of the log group. Possible values: STANDARD or INFREQUENT_ACCESS."
+}
+
+variable "monitoring_role_path" {
+  type        = string
+  default     = "/"
+  description = "Path for the IAM role."
+}
+
+variable "monitoring_role_max_session_duration" {
+  type        = number
+  default     = 3600
+  description = "Maximum session duration for the role in seconds (1 to 12 hours)."
+}
+
+variable "force_detach_policies" {
+  type        = bool
+  default     = false
+  description = "Force detaching any policies the role has before destroying it."
+}
+
+variable "inline_policies" {
+  type        = map(string)
+  default     = {}
+  description = "Map of inline policies to attach to the IAM role."
+}
+
+variable "managed_policy_arns" {
+  type        = list(string)
+  default     = []
+  description = "List of IAM managed policy ARNs to attach to the IAM role."
+}
+
+variable "rotation_period_in_days" {
+  type        = number
+  default     = 365
+  description = "Custom period for key rotation in days (90–2560)."
+}
+
+variable "bypass_policy_lockout_safety_check" {
+  type        = bool
+  default     = false
+  description = "Whether to bypass the key policy lockout safety check."
+}
+
+variable "custom_key_store_id" {
+  type        = string
+  default     = null
+  description = "Custom Key Store ID where the key will be stored."
+}
+
+variable "ssm_parameter_allowed_pattern" {
+  type        = string
+  default     = ""
+  description = "Allowed pattern to validate the parameter value."
+}
+
+variable "ssm_parameter_data_type" {
+  type        = string
+  default     = "text"
+  description = "The data type of the parameter."
+}
+
+variable "ssm_parameter_tags" {
+  type        = map(string)
+  default     = {}
+  description = "A map of tags to assign to the SSM parameter."
+}
+
+variable "ssm_parameter_tier" {
+  type        = string
+  default     = "Standard"
+  description = "The tier of the SSM parameter (Standard, Advanced, Intelligent-Tiering)."
 }
