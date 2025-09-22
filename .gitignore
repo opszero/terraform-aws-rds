@@ -5,3 +5,8 @@ terraform.tfstate
 terraform.tfstate.backup
 *./idea
 /.idea/
+*/.terraform.lock.hcl
+/example/oracle_db/.terraform.lock.hcl
+/example/mariaDb/.terraform.lock.hcl
+/example/replica-mysql/.terraform.lock.hcl
+/example/postgreSQL/.terraform.lock.hcl

@@ -3,24 +3,20 @@ provider "aws" {
 }
 
 module "vpc" {
-  source      = "git::https://github.com/cypik/terraform-aws-vpc.git?ref=v1.0.0"
-  name        = "vpc"
-  environment = "test"
-  label_order = ["environment", "name"]
+  source = "git::https://github.com/opszero/terraform-aws-vpc.git?ref=v1.0.0"
+  name   = "vpc"
 
   cidr_block = "10.0.0.0/16"
 }
 
 module "private_subnets" {
-  source      = "git::https://github.com/cypik/terraform-aws-subnet.git?ref=v1.0.0"
-  name        = "subnets"
-  environment = "test"
-  label_order = ["name", "environment"]
-
+  source              = "git::https://github.com/opszero/terraform-aws-subnets.git?ref=v1.0.0"
+  name                = "subnets"
+  environment         = "test"
   nat_gateway_enabled = true
 
   availability_zones = ["eu-west-1a", "eu-west-1b"]
-  vpc_id             = module.vpc.id
+  vpc_id             = module.vpc.vpc_id
   type               = "public-private"
   igw_id             = module.vpc.igw_id
   cidr_block         = module.vpc.vpc_cidr_block
@@ -31,9 +27,7 @@ module "private_subnets" {
 module "postgresql" {
   source = "./../../"
 
-  name        = "postgresql"
-  environment = "test"
-  label_order = ["environment", "name"]
+  name = "postgresql"
 
   engine            = "postgres"
   engine_version    = "14.6"
@@ -43,16 +37,16 @@ module "postgresql" {
   storage_encrypted = true
   family            = "postgres14"
 
-  db_name  = "test"
-  username = "dbname"
-  port     = "5432"
+  db_name     = "test"
+  db_username = "dbname"
+  port        = "5432"
 
   maintenance_window = "Mon:00:00-Mon:03:00"
   backup_window      = "03:00-06:00"
   multi_az           = false
 
 
-  vpc_id        = module.vpc.id
+  vpc_id        = module.vpc.vpc_id
   allowed_ip    = [module.vpc.vpc_cidr_block]
   allowed_ports = [5432]
 
