@@ -3,8 +3,8 @@ provider "aws" {
 }
 
 module "vpc" {
-  source     = "git::https://github.com/opszero/terraform-aws-vpc.git?ref=v1.0.0"
-  name       = "vpc"
+  source     = "git::https://github.com/opszero/terraform-aws-vpc.git?ref=v1.0.1"
+  name       = "test"
   cidr_block = "10.0.0.0/16"
 }
 
