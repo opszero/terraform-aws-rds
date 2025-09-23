@@ -162,12 +162,6 @@ variable "monitoring_interval" {
   description = "The interval, in seconds, between points when Enhanced Monitoring metrics are collected for the DB instance. To disable collecting Enhanced Monitoring metrics, specify 0. The default is 0. Valid Values: 0, 1, 5, 10, 15, 30, 60."
 }
 
-variable "monitoring_role_name" {
-  type        = string
-  default     = "rds-monitoring-role"
-  description = "Name of the IAM role which will be created when create_monitoring_role is enabled."
-}
-
 variable "monitoring_role_description" {
   type        = string
   default     = null
@@ -373,12 +367,6 @@ variable "enabled_read_replica" {
   description = "A list of enabled read replica"
 }
 
-variable "db_subnet_group_tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags for the DB subnet group"
-}
-
 variable "tags" {
   type        = map(any)
   default     = {}
@@ -452,18 +440,6 @@ variable "sg_ingress_description" {
   description = "Description of the ingress rule"
 }
 
-variable "deletion_window_in_days" {
-  type        = number
-  default     = 7
-  description = "Duration in days after which the key is deleted after destruction of the resource."
-}
-
-variable "enable_key_rotation" {
-  type        = string
-  default     = true
-  description = "Specifies whether key rotation is enabled."
-}
-
 variable "ssm_parameter_description" {
   type        = string
   default     = "Description of the parameter."
@@ -480,4 +456,23 @@ variable "ssm_parameter_endpoint_enabled" {
   type        = bool
   default     = false
   description = "Name of the parameter."
+}
+
+variable "storage_encrypted" {
+  type        = bool
+  default     = true
+  description = "Enable encryption for storage"
+}
+
+variable "kms_key_id" {
+  type        = string
+  default     = null
+  description = "KMS key ARN/ID used for encrypting RDS instance"
+}
+
+variable "password" {
+  type        = string
+  sensitive   = true
+  default     = null
+  description = "Master user password for MySQL database"
 }

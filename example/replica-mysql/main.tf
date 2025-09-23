@@ -3,22 +3,18 @@ provider "aws" {
 }
 
 module "vpc" {
-  source      = "git::https://github.com/cypik/terraform-aws-vpc.git?ref=v1.0.0"
-  name        = "vpc"
-  environment = "test"
-  label_order = ["environment", "name"]
-
+  source     = "git::https://github.com/opszero/terraform-aws-vpc.git?ref=v1.0.1"
+  name       = "test"
   cidr_block = "10.0.0.0/16"
 }
 
 module "subnets" {
-  source      = "git::https://github.com/cypik/terraform-aws-subnet.git?ref=v1.0.0"
+  source      = "git::https://github.com/opszero/terraform-aws-subnets.git?ref=v1.0.0"
   name        = "subnets"
   environment = "test"
-  label_order = ["environment", "name"]
 
   availability_zones = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  vpc_id             = module.vpc.id
+  vpc_id             = module.vpc.vpc_id
   type               = "public"
   igw_id             = module.vpc.igw_id
   cidr_block         = module.vpc.vpc_cidr_block
@@ -29,9 +25,6 @@ module "mysql" {
   source = "../../"
 
   name                   = "rds"
-  environment            = "test"
-  label_order            = ["environment", "name"]
-  enabled                = true
   engine                 = "mysql"
   engine_version         = "8.0"
   instance_class         = "db.t4g.large"
@@ -41,18 +34,17 @@ module "mysql" {
   snapshot_identifier    = ""
   kms_key_id             = ""
   enabled_read_replica   = true
-  enabled_replica        = true
 
-  db_name  = "replica"
-  username = "replica_mysql"
-  password = "cdsjhcjjkxnna5s"
+  db_name     = "replica"
+  db_username = "replica_mysql"
+  password    = "cdsjhcjjkxnna5s"
 
   port               = 3306
   maintenance_window = "Mon:00:00-Mon:03:00"
   backup_window      = "03:00-06:00"
   multi_az           = true
 
-  vpc_id        = module.vpc.id
+  vpc_id        = module.vpc.vpc_id
   allowed_ip    = [module.vpc.vpc_cidr_block]
   allowed_ports = [3306]
 

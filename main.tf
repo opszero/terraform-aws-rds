@@ -8,16 +8,6 @@ locals {
   description = coalesce(var.option_group_description, format("%s option group", var.name))
 }
 
-resource "random_id" "snapshot_identifier" {
-  count = !var.skip_final_snapshot ? 1 : 0
-
-  keepers = {
-    id = var.identifier
-  }
-
-  byte_length = 4
-}
-
 resource "aws_db_subnet_group" "this" {
   name        = var.name
   description = local.description
@@ -155,7 +145,7 @@ resource "aws_security_group_rule" "egress_ipv6" {
   ipv6_cidr_blocks  = ["::/0"]
   security_group_id = join("", aws_security_group.default[*].id)
 }
-
+# tfsec:ignore:aws-ec2-no-public-ingress-sgr
 resource "aws_security_group_rule" "ingress" {
   count = length(var.allowed_ip) > 0 == true && length(var.sg_ids) < 1 ? length(compact(var.allowed_ports)) : 0
 
@@ -170,6 +160,7 @@ resource "aws_security_group_rule" "ingress" {
 
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
+# tflint-ignore: terraform_unused_declarations
 data "aws_iam_policy_document" "default" {
   version = "2012-10-17"
   statement {
@@ -199,7 +190,7 @@ resource "aws_db_instance" "this" {
   instance_class    = var.instance_class
   allocated_storage = var.allocated_storage
   storage_type      = var.storage_type
-  storage_encrypted = true
+  storage_encrypted = var.storage_encrypted
   license_model     = var.license_model
 
   db_name                             = var.db_name
@@ -301,17 +292,17 @@ resource "aws_db_instance" "this" {
 resource "aws_db_instance" "read" {
   count = var.enabled_read_replica ? 1 : 0
 
-  identifier        = format("%s-replica", var.name)
-  identifier_prefix = local.identifier_prefix
-
-  engine            = null
-  engine_version    = null
-  instance_class    = var.replica_instance_class
-  allocated_storage = var.allocated_storage
-  storage_type      = var.storage_type
-  storage_encrypted = true
-  license_model     = var.license_model
-
+  identifier                          = format("%s-replica", var.name)
+  identifier_prefix                   = local.identifier_prefix
+  kms_key_id                          = var.kms_key_id
+  engine                              = null
+  engine_version                      = null
+  instance_class                      = var.replica_instance_class
+  allocated_storage                   = var.allocated_storage
+  storage_type                        = var.storage_type
+  storage_encrypted                   = var.storage_encrypted
+  license_model                       = var.license_model
+  password                            = var.password
   db_name                             = null
   port                                = var.port
   domain                              = var.domain
