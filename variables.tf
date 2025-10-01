@@ -476,3 +476,9 @@ variable "password" {
   default     = null
   description = "Master user password for MySQL database"
 }
+
+variable "manage_master_user_password" {
+  description = "Whether to allow RDS to manage the master user password in Secrets Manager"
+  type        = bool
+  default     = true
+}
