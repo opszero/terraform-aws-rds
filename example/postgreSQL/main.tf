@@ -30,21 +30,19 @@ module "postgresql" {
   name = "postgresql"
 
   engine            = "postgres"
-  engine_version    = "14.6"
+  engine_version    = "14"
   instance_class    = "db.t3.medium"
   allocated_storage = 50
   engine_name       = "postgres"
   storage_encrypted = true
   family            = "postgres14"
 
-  db_name     = "test"
-  db_username = "dbname"
-  port        = "5432"
-
+  db_name            = "test"
+  db_username        = "dbname"
+  port               = "5432"
   maintenance_window = "Mon:00:00-Mon:03:00"
   backup_window      = "03:00-06:00"
   multi_az           = false
-
 
   vpc_id        = module.vpc.vpc_id
   allowed_ip    = [module.vpc.vpc_cidr_block]
