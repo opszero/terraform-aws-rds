@@ -23,7 +23,7 @@ To use this module, you can include it in your Terraform configuration. Here's a
 
 ```hcl
 module "mariadb" {
-  source            = "git::https://github.com/opszero/terraform-aws-rds.git?ref=v1.0.1"
+  source            = "git::https://github.com/opszero/terraform-aws-rds.git?ref=v1.0.2"
   name              = "mariadb"
   engine            = "MariaDB"
   engine_version    = "10.6.10"
@@ -63,7 +63,7 @@ module "mariadb" {
 ## Example: mysql-complete
 ```hcl
 module "mysql" {
-  source            = "git::https://github.com/opszero/terraform-aws-rds.git?ref=v1.0.1"
+  source            = "git::https://github.com/opszero/terraform-aws-rds.git?ref=v1.0.2"
   name              = "mysql"
   engine            = "mysql"
   engine_version    = "8.0.28"
@@ -129,7 +129,7 @@ module "mysql" {
 ## Example: oracle_db
 ```hcl
 module "oracle" {
-  source            = "git::https://github.com/opszero/terraform-aws-rds.git?ref=v1.0.1"
+  source            = "git::https://github.com/opszero/terraform-aws-rds.git?ref=v1.0.2"
   name              = "oracle"
 
   engine            = "oracle-ee"
@@ -172,7 +172,7 @@ module "oracle" {
 ## Example: postgreSQL
 ```hcl
 module "postgresql" {
-  source            = "git::https://github.com/opszero/terraform-aws-rds.git?ref=v1.0.1"
+  source            = "git::https://github.com/opszero/terraform-aws-rds.git?ref=v1.0.2"
   name              = "postgresql"
 
   engine            = "postgres"
@@ -215,7 +215,7 @@ module "postgresql" {
 ## Example: replica-mysql
 ```hcl
 module "mysql" {
-  source                 = "git::https://github.com/opszero/terraform-aws-rds.git?ref=v1.0.1"
+  source                 = "git::https://github.com/opszero/terraform-aws-rds.git?ref=v1.0.2"
   name                   = "rds"
   engine                 = "mysql"
   engine_version         = "8.0"
@@ -351,6 +351,7 @@ No modules.
 | <a name="input_license_model"></a> [license\_model](#input\_license\_model) | License model information for this DB instance. Optional, but required for some DB engines, i.e. Oracle SE1 | `string` | `null` | no |
 | <a name="input_maintenance_window"></a> [maintenance\_window](#input\_maintenance\_window) | The window to perform maintenance in. Syntax: 'ddd:hh24:mi-ddd:hh24:mi'. Eg: 'Mon:00:00-Mon:03:00' | `string` | `null` | no |
 | <a name="input_major_engine_version"></a> [major\_engine\_version](#input\_major\_engine\_version) | Specifies the major version of the engine that this option group should be associated with | `string` | `null` | no |
+| <a name="input_manage_master_user_password"></a> [manage\_master\_user\_password](#input\_manage\_master\_user\_password) | Whether to allow RDS to manage the master user password in Secrets Manager | `bool` | `true` | no |
 | <a name="input_max_allocated_storage"></a> [max\_allocated\_storage](#input\_max\_allocated\_storage) | Specifies the value for Storage Autoscaling | `number` | `0` | no |
 | <a name="input_monitoring_interval"></a> [monitoring\_interval](#input\_monitoring\_interval) | The interval, in seconds, between points when Enhanced Monitoring metrics are collected for the DB instance. To disable collecting Enhanced Monitoring metrics, specify 0. The default is 0. Valid Values: 0, 1, 5, 10, 15, 30, 60. | `number` | `0` | no |
 | <a name="input_monitoring_role_description"></a> [monitoring\_role\_description](#input\_monitoring\_role\_description) | Description of the monitoring IAM role | `string` | `null` | no |
