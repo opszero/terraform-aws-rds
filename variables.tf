@@ -378,6 +378,28 @@ variable "tags" {
   description = "Additional tags for the DB instance"
 }
 
+variable "parameter_group_name" {
+  type = map(any)
+  default = {
+    Environment = "prod"
+    Managedby   = "opszero"
+    Name = "metabase-prod-parameter"
+    Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
+  }
+  description = "Additional tags for the DB instance"
+}
+
+
+variable "tags_option" {
+  type = map(any)
+  default = {
+    Environment = "prod"
+    Managedby   = "opszero"
+    Name = "metabase-prod-option-group"
+    Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
+  }
+  description = "Additional tags for the DB instance"
+}
 
 variable "enable_security_group" {
   type        = bool
@@ -499,6 +521,15 @@ variable "parameter_group_name" {
 variable "subnet_group_name" {
   type        = string
   default     = "metabase-prod"
+  description = "The ID of the VPC that the instance security group belongs to."
+  sensitive   = true
+}
+
+
+
+variable "option_group_name" {
+  type        = string
+  default     = "metabase-prod-option-group"
   description = "The ID of the VPC that the instance security group belongs to."
   sensitive   = true
 }
