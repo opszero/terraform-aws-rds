@@ -28,9 +28,7 @@ resource "aws_db_parameter_group" "this" {
     }
   }
   tags = var.tags_parameter
-  lifecycle {
-    create_before_destroy = true
-  }
+
 }
 
 
