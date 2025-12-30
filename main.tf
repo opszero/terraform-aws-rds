@@ -401,3 +401,39 @@ resource "aws_ssm_parameter" "secret-endpoint" {
   type        = var.ssm_parameter_type
   value       = join("", aws_db_instance.this[*].endpoint)
 }
+
+data "aws_caller_identity" "current" {}
+
+resource "aws_kms_key" "default" {
+  description             = "Parameter Store KMS master key"
+  enable_key_rotation     = true
+  deletion_window_in_days = 7
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "Enable IAM User Permissions"
+        Effect    = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+        }
+        Action   = "kms:*"
+        Resource = "*"
+      }
+    ]
+  })
+
+  tags = {
+    Environment = "prod"
+    Managedby   = "opszero"
+    Name        = "metabase-prod"
+    Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
+  }
+}
+
+
+resource "aws_kms_alias" "default" {
+  name          = "alias/rds"
+  target_key_id = aws_kms_key.default.id
+}

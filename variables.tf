@@ -570,7 +570,6 @@ variable "subnet_group_name" {
   type        = string
   default     = "metabase-prod"
   description = "The ID of the VPC that the instance security group belongs to."
-  sensitive   = true
 }
 
 
