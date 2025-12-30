@@ -402,7 +402,6 @@ resource "aws_ssm_parameter" "secret-endpoint" {
   value       = join("", aws_db_instance.this[*].endpoint)
 }
 
-data "aws_caller_identity" "current" {}
 
 resource "aws_kms_key" "default" {
   description             = "Parameter Store KMS master key"
