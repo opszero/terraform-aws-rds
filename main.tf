@@ -9,7 +9,7 @@ locals {
 }
 
 resource "aws_db_subnet_group" "this" {
-  name        = var.name
+  name        = var.subnet_group_name
   description = local.description
   subnet_ids  = var.subnet_ids
   tags        = var.tags
