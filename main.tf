@@ -16,7 +16,7 @@ resource "aws_db_subnet_group" "this" {
 }
 
 resource "aws_db_parameter_group" "this" {
-  name        = var.name
+  name        = var.subnet_group_name
   description = local.description
   family      = var.family
   dynamic "parameter" {
@@ -35,7 +35,7 @@ resource "aws_db_parameter_group" "this" {
 
 
 resource "aws_db_option_group" "this" {
-  name                     = var.name
+  name        = var.subnet_group_name
   option_group_description = local.description
   engine_name              = var.engine_name
   major_engine_version     = var.major_engine_version
