@@ -372,11 +372,12 @@ variable "tags" {
   default = {
     Environment = "prod"
     Managedby   = "opszero"
-    Name        = "metabase-prod"
+    subnet_group_name = "metabase-prod-parameter"
     Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
   }
   description = "Additional tags for the DB instance"
 }
+
 
 variable "enable_security_group" {
   type        = bool
