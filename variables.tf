@@ -378,16 +378,17 @@ variable "tags" {
   description = "Additional tags for the DB instance"
 }
 
-variable "parameter_group_name" {
-  type = map(any)
+variable "tags" {
+  type = map(string)
   default = {
     Environment = "prod"
     Managedby   = "opszero"
-    Name = "metabase-prod-parameter"
+    Name        = "metabase-prod-option-group"
     Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
   }
   description = "Additional tags for the DB instance"
 }
+
 
 
 variable "tags_option" {
