@@ -385,6 +385,18 @@ variable "db_option_group_tags" {
   description = "Additional tags for the DB instance"
 }
 
+variable "security_group_tags" {
+  type = map(any)
+  default = {
+    Environment = "prod"
+    Managedby   = "opszero"
+    Name = "metabase-prod-sg-postgres"
+    Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
+  }
+  description = "Additional tags for the DB instance"
+}
+
+
 variable "tags" {
   type = map(any)
   default = {

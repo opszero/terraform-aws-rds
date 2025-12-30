@@ -112,7 +112,7 @@ resource "aws_security_group" "default" {
   name        = var.name
   vpc_id      = var.vpc_id
   description = var.sg_description
-  tags        = var.tags
+  tags        = var.security_group_tags
   lifecycle {
     create_before_destroy = true
   }
