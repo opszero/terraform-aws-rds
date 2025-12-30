@@ -55,7 +55,7 @@ resource "aws_db_option_group" "this" {
     }
   }
 
-  tags = var.tags
+  tags = var.db_option_group_tags
 
   timeouts {
     delete = lookup(var.timeouts, "delete", null)
@@ -125,7 +125,7 @@ resource "aws_security_group_rule" "egress" {
   description       = var.sg_egress_description
   type              = "egress"
   from_port         = 0
-  to_port           = 65535
+  to_port           = 0
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = join("", aws_security_group.default[*].id)
@@ -138,7 +138,7 @@ resource "aws_security_group_rule" "egress_ipv6" {
   description       = var.sg_egress_ipv6_description
   type              = "egress"
   from_port         = 0
-  to_port           = 65535
+  to_port           = 0
   protocol          = "-1"
   ipv6_cidr_blocks  = ["::/0"]
   security_group_id = join("", aws_security_group.default[*].id)
@@ -151,7 +151,7 @@ resource "aws_security_group_rule" "ingress" {
   type              = "ingress"
   from_port         = element(var.allowed_ports, count.index)
   to_port           = element(var.allowed_ports, count.index)
-  protocol          = "all"
+  protocol          = "tcp"
   cidr_blocks       = var.allowed_ip
   security_group_id = join("", aws_security_group.default[*].id)
 }

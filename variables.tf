@@ -374,12 +374,23 @@ variable "db_subnet_group_tags" {
 }
 
 
-variable "tags" {
+variable "db_option_group_tags" {
   type = map(any)
   default = {
     Environment = "prod"
     Managedby   = "opszero"
     Name = "metabase-prod-option-group"
+    Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
+  }
+  description = "Additional tags for the DB instance"
+}
+
+variable "tags" {
+  type = map(any)
+  default = {
+    Environment = "prod"
+    Managedby   = "opszero"
+    Name = "metabase-prod"
     Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
   }
   description = "Additional tags for the DB instance"
