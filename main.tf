@@ -10,13 +10,13 @@ locals {
 
 resource "aws_db_subnet_group" "this" {
   name        = var.subnet_group_name
-  description = local.description
+  description = "metabase option group"
   subnet_ids  = var.subnet_ids
   tags        = var.tags
 }
 
 resource "aws_db_parameter_group" "this" {
-  name        = var.subnet_group_name
+  name        = var.parameter_group_name
   description = local.description
   family      = var.family
   dynamic "parameter" {

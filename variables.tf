@@ -372,7 +372,7 @@ variable "tags" {
   default = {
     Environment = "prod"
     Managedby   = "opszero"
-    subnet_group_name = "metabase-prod-parameter"
+    Name = "metabase-prod-option-group"
     Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
   }
   description = "Additional tags for the DB instance"
@@ -487,4 +487,18 @@ variable "manage_master_user_password" {
   description = "Whether to allow RDS to manage the master user password in Secrets Manager"
   type        = bool
   default     = true
+}
+
+variable "parameter_group_name" {
+  type        = string
+  default     = "metabase-prod-parameter"
+  description = "The ID of the VPC that the instance security group belongs to."
+  sensitive   = true
+}
+
+variable "subnet_group_name" {
+  type        = string
+  default     = "metabase-prod"
+  description = "The ID of the VPC that the instance security group belongs to."
+  sensitive   = true
 }
