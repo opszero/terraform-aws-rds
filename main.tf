@@ -17,7 +17,7 @@ resource "aws_db_subnet_group" "this" {
 
 resource "aws_db_parameter_group" "this" {
   name        = var.parameter_group_name
-  description = local.description
+  description = var.parameter_description
   family      = var.family
   dynamic "parameter" {
     for_each = var.parameters
@@ -27,7 +27,7 @@ resource "aws_db_parameter_group" "this" {
       apply_method = lookup(parameter.value, "apply_method", null)
     }
   }
-  tags = var.tags
+  tags = var.tags_parameter
   lifecycle {
     create_before_destroy = true
   }
