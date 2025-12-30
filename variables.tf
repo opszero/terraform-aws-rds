@@ -367,6 +367,18 @@ variable "enabled_read_replica" {
   description = "A list of enabled read replica"
 }
 
+variable "db_subnet_group_tags" {
+  type = map(any)
+  default = {
+    Environment = "prod"
+    Managedby   = "opszero"
+    Name = "metabase-prod"
+    Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
+  }
+  description = "Additional tags for the DB instance"
+}
+
+
 variable "tags" {
   type = map(any)
   default = {
@@ -388,6 +400,13 @@ variable "tags_parameter" {
   }
   description = "Additional tags for the DB instance"
 }
+
+variable "option_group_description" {
+  type        = string
+  default     = "metabase option group"
+  description = "metabase option group."
+}
+
 
 variable "parameter_description" {
   type        = string
@@ -520,7 +539,6 @@ variable "parameter_group_name" {
   type        = string
   default     = "metabase-prod-parameter"
   description = "The ID of the VPC that the instance security group belongs to."
-  sensitive   = true
 }
 
 variable "subnet_group_name" {

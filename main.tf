@@ -12,7 +12,7 @@ resource "aws_db_subnet_group" "this" {
   name        = var.subnet_group_name
   description = "metabase option group"
   subnet_ids  = var.subnet_ids
-  tags        = var.tags
+  tags        = var.db_subnet_group_tags
 }
 
 resource "aws_db_parameter_group" "this" {
@@ -34,7 +34,7 @@ resource "aws_db_parameter_group" "this" {
 
 resource "aws_db_option_group" "this" {
   name        = var.subnet_group_name
-  option_group_description = local.description
+  option_group_description = var.option_group_description
   engine_name              = var.engine_name
   major_engine_version     = var.major_engine_version
   dynamic "option" {
