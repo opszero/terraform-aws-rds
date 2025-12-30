@@ -109,7 +109,7 @@ resource "aws_iam_role_policy_attachment" "enhanced_monitoring" {
 resource "aws_security_group" "default" {
   count = var.enable_security_group && length(var.sg_ids) < 1 ? 1 : 0
 
-  name        = var.name
+  name        = var.rds_security_group_name
   vpc_id      = var.vpc_id
   description = var.sg_description
   tags        = var.security_group_tags
