@@ -307,11 +307,6 @@ variable "cloudwatch_log_group_retention_in_days" {
   description = "The number of days to retain CloudWatch logs for the DB instance"
 }
 
-variable "option_group_description" {
-  type        = string
-  default     = null
-  description = "The description of the option group"
-}
 
 variable "engine_name" {
   type        = string
