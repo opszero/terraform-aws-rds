@@ -368,8 +368,13 @@ variable "enabled_read_replica" {
 }
 
 variable "tags" {
-  type        = map(any)
-  default     = {}
+  type = map(any)
+  default = {
+    Environment = "prod"
+    Managedby   = "opszero"
+    Name        = "metabase-prod"
+    Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
+  }
   description = "Additional tags for the DB instance"
 }
 
