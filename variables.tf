@@ -532,7 +532,7 @@ variable "manage_master_user_password" {
 
 variable "parameter_group_name" {
   type        = string
-  default     = "metabase-prod-parameter"
+  default     = "metabase-prod"
   description = "The ID of the VPC that the instance security group belongs to."
 }
 
