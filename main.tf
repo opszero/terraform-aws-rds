@@ -8,6 +8,9 @@ locals {
   description = coalesce(var.option_group_description, format("%s option group", var.name))
 }
 
+resource "random_id" "password" {
+ byte_length = 20
+}
 resource "aws_db_subnet_group" "this" {
   name        = var.subnet_group_name
   description = "airbyte option group"
