@@ -10,7 +10,7 @@ locals {
 
 resource "aws_db_subnet_group" "this" {
   name        = var.subnet_group_name
-  description = "metabase option group"
+  description = "airbyte option group"
   subnet_ids  = var.subnet_ids
   tags        = var.db_subnet_group_tags
 }
@@ -18,7 +18,7 @@ resource "aws_db_subnet_group" "this" {
 resource "aws_db_parameter_group" "this" {
   name        = var.parameter_group_name
   description = var.parameter_description
-  family      = var.family
+  family      = "postgres14"
   dynamic "parameter" {
     for_each = var.parameters
     content {

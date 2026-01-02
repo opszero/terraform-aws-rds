@@ -316,7 +316,7 @@ variable "engine_name" {
 
 variable "major_engine_version" {
   type        = string
-  default     = null
+  default     = "14"
   description = "Specifies the major version of the engine that this option group should be associated with"
 }
 
@@ -435,8 +435,8 @@ variable "option_group_description" {
 
 variable "parameter_description" {
   type        = string
-  default     = "metabase option group"
-  description = "metabase option group."
+  default     = "airbyte option group"
+  description = "airbyte option group"
 }
 
 variable "tags_option" {
