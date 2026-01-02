@@ -390,7 +390,7 @@ variable "security_group_tags" {
   default = {
     Environment = "prod"
     Managedby   = "opszero"
-    Name = "metabase-prod"
+    Name = "airbyte-prod"
     Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
   }
   description = "Additional tags for the DB instance"
@@ -399,7 +399,7 @@ variable "security_group_tags" {
 
 variable "rds_security_group_name" {
   type        = string
-  default     = "metabase-prod-sg-postgres"
+  default     = "airbyte-prod-sg-postgres"
   description = "The instance type of the RDS instance"
 }
 

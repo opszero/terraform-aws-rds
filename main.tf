@@ -426,8 +426,8 @@ resource "aws_kms_key" "default" {
   tags = {
     Environment = "prod"
     Managedby   = "opszero"
-    Name        = "metabase-prod"
-    Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
+    Name        = "airbyte-prod"
+    Repository  = "https://github.com/opszero/terraform-aws-eks-airbyte.git"
   }
 }
 
