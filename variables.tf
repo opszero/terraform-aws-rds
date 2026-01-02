@@ -367,8 +367,8 @@ variable "db_subnet_group_tags" {
   default = {
     Environment = "prod"
     Managedby   = "opszero"
-    Name = "metabase-prod"
-    Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
+    Name = "airbyte-prod"
+    Repository  = "https://github.com/opszero/terraform-aws-eks-airbyte.git"
   }
   description = "Additional tags for the DB instance"
 }
@@ -379,8 +379,8 @@ variable "db_option_group_tags" {
   default = {
     Environment = "prod"
     Managedby   = "opszero"
-    Name = "metabase-prod-option-group"
-    Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
+    Name = "airbyte-prod-option-group"
+    Repository  = "https://github.com/opszero/terraform-aws-eks-airbyte.git"
   }
   description = "Additional tags for the DB instance"
 }
@@ -391,7 +391,7 @@ variable "security_group_tags" {
     Environment = "prod"
     Managedby   = "opszero"
     Name = "airbyte-prod"
-    Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
+    Repository  = "https://github.com/opszero/terraform-aws-eks-airbyte.git"
   }
   description = "Additional tags for the DB instance"
 }
@@ -409,8 +409,8 @@ variable "tags" {
   default = {
     Environment = "prod"
     Managedby   = "opszero"
-    Name = "metabase-prod"
-    Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
+    Name = "airbyte-prod"
+    Repository  = "https://github.com/opszero/terraform-aws-eks-airbyte.git"
   }
   description = "Additional tags for the DB instance"
 }
@@ -420,16 +420,16 @@ variable "tags_parameter" {
   default = {
     Environment = "prod"
     Managedby   = "opszero"
-    Name        = "metabase-prod-parameter"
-    Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
+    Name        = "airbyte-prod-parameter"
+    Repository  = "https://github.com/opszero/terraform-aws-eks-airbyte.git"
   }
   description = "Additional tags for the DB instance"
 }
 
 variable "option_group_description" {
   type        = string
-  default     = "metabase option group"
-  description = "metabase option group."
+  default     = "airbyte option group"
+  description = "airbyte option group."
 }
 
 
@@ -444,8 +444,8 @@ variable "tags_option" {
   default = {
     Environment = "prod"
     Managedby   = "opszero"
-    Name = "metabase-prod-option-group"
-    Repository  = "https://github.com/opszero/terraform-aws-eks-metabase.git"
+    Name = "airbyte-prod-option-group"
+    Repository  = "https://github.com/opszero/terraform-aws-eks-airbyte.git"
   }
   description = "Additional tags for the DB instance"
 }
@@ -562,13 +562,13 @@ variable "manage_master_user_password" {
 
 variable "parameter_group_name" {
   type        = string
-  default     = "metabase-prod"
+  default     = "airbyte-prod"
   description = "The ID of the VPC that the instance security group belongs to."
 }
 
 variable "subnet_group_name" {
   type        = string
-  default     = "metabase-prod"
+  default     = "airbyte-prod"
   description = "The ID of the VPC that the instance security group belongs to."
 }
 
@@ -576,7 +576,7 @@ variable "subnet_group_name" {
 
 variable "option_group_name" {
   type        = string
-  default     = "metabase-prod-option-group"
+  default     = "airbyte-prod-option-group"
   description = "The ID of the VPC that the instance security group belongs to."
   sensitive   = true
 }

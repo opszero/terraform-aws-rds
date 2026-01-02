@@ -433,6 +433,6 @@ resource "aws_kms_key" "default" {
 
 
 resource "aws_kms_alias" "default" {
-  name          = "alias/rds"
+  name          = "alias/rds-psql"
   target_key_id = aws_kms_key.default.id
 }
