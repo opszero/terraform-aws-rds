@@ -580,3 +580,9 @@ variable "option_group_name" {
   description = "The ID of the VPC that the instance security group belongs to."
   sensitive   = true
 }
+
+variable "final_snapshot_identifier" {
+  type        = string
+  default     = "metabase-prod-postgres"
+  description = "The ID of the VPC that the instance security group belongs to."
+}
