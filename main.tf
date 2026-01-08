@@ -234,7 +234,7 @@ resource "aws_db_instance" "this" {
   snapshot_identifier       = var.snapshot_identifier
   copy_tags_to_snapshot     = var.copy_tags_to_snapshot
   skip_final_snapshot       = var.skip_final_snapshot
-  final_snapshot_identifier = var.final_snapshot_identifier
+  final_snapshot_identifier = var.name
 
   #tfsec:ignore:aws-rds-enable-performance-insights
   performance_insights_enabled          = var.performance_insights_enabled
