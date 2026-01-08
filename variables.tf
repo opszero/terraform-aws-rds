@@ -367,7 +367,7 @@ variable "db_subnet_group_tags" {
   default = {
     Environment = "prod"
     Managedby   = "opszero"
-    Name = "airbyte-prod"
+    Name        = "airbyte-prod"
     Repository  = "https://github.com/opszero/terraform-aws-eks-airbyte.git"
   }
   description = "Additional tags for the DB instance"
@@ -379,7 +379,7 @@ variable "db_option_group_tags" {
   default = {
     Environment = "prod"
     Managedby   = "opszero"
-    Name = "airbyte-prod-option-group"
+    Name        = "airbyte-prod-option-group"
     Repository  = "https://github.com/opszero/terraform-aws-eks-airbyte.git"
   }
   description = "Additional tags for the DB instance"
@@ -390,7 +390,7 @@ variable "security_group_tags" {
   default = {
     Environment = "prod"
     Managedby   = "opszero"
-    Name = "airbyte-prod"
+    Name        = "airbyte-prod"
     Repository  = "https://github.com/opszero/terraform-aws-eks-airbyte.git"
   }
   description = "Additional tags for the DB instance"
@@ -409,7 +409,7 @@ variable "tags" {
   default = {
     Environment = "prod"
     Managedby   = "opszero"
-    Name = "airbyte-prod"
+    Name        = "airbyte-prod"
     Repository  = "https://github.com/opszero/terraform-aws-eks-airbyte.git"
   }
   description = "Additional tags for the DB instance"
@@ -444,7 +444,7 @@ variable "tags_option" {
   default = {
     Environment = "prod"
     Managedby   = "opszero"
-    Name = "airbyte-prod-option-group"
+    Name        = "airbyte-prod-option-group"
     Repository  = "https://github.com/opszero/terraform-aws-eks-airbyte.git"
   }
   description = "Additional tags for the DB instance"
