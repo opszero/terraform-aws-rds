@@ -197,6 +197,7 @@ resource "aws_db_instance" "this" {
   db_name                             = var.db_name
   username                            = var.db_username
   password                            = var.password
+  manage_master_user_password         = var.manage_master_user_password
   port                                = var.port
   domain                              = var.domain
   domain_iam_role_name                = var.domain_iam_role_name
