@@ -9,7 +9,7 @@ locals {
 }
 
 resource "random_id" "password" {
- byte_length = 20
+  byte_length = 20
 }
 resource "aws_db_subnet_group" "this" {
   name        = var.subnet_group_name
@@ -36,7 +36,7 @@ resource "aws_db_parameter_group" "this" {
 
 
 resource "aws_db_option_group" "this" {
-  name        = var.subnet_group_name
+  name                     = var.subnet_group_name
   option_group_description = var.option_group_description
   engine_name              = var.engine_name
   major_engine_version     = var.major_engine_version
@@ -234,7 +234,7 @@ resource "aws_db_instance" "this" {
   snapshot_identifier       = var.snapshot_identifier
   copy_tags_to_snapshot     = var.copy_tags_to_snapshot
   skip_final_snapshot       = var.skip_final_snapshot
-  final_snapshot_identifier = var.name
+  final_snapshot_identifier = var.final_snapshot_identifier
 
   #tfsec:ignore:aws-rds-enable-performance-insights
   performance_insights_enabled          = var.performance_insights_enabled
@@ -414,8 +414,8 @@ resource "aws_kms_key" "default" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "Enable IAM User Permissions"
-        Effect    = "Allow"
+        Sid    = "Enable IAM User Permissions"
+        Effect = "Allow"
         Principal = {
           AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         }
