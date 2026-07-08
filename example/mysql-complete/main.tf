@@ -34,17 +34,18 @@ module "mysql" {
   label_order = ["environment", "name"]
 
   engine            = "mysql"
-  engine_version    = "8.0.40"
-  instance_class    = "db.t4g.micro"
-  allocated_storage = 16
-  vpc_id            = module.vpc.vpc_id
-  allowed_ip        = [module.vpc.vpc_cidr_block]
-  allowed_ports     = [3306]
+  engine_version    = "8.0.28"
+  instance_class    = "db.m6i.xlarge"
+  allocated_storage = 5
+  storage_encrypted = true
 
-  db_name  = "test"
-  username = "user"
-  password = "esfsgcGdfawAhdxtfjm!"
-  port     = "3306"
+  vpc_id        = module.vpc.vpc_id
+  allowed_ip    = [module.vpc.vpc_cidr_block]
+  allowed_ports = [3306]
+
+  db_name     = "test"
+  db_username = "user"
+  port        = "3306"
 
   maintenance_window = "Mon:00:00-Mon:03:00"
   backup_window      = "03:00-06:00"

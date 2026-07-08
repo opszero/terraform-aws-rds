@@ -28,7 +28,14 @@ module "private_subnets" {
 }
 
 module "mariadb" {
-  source = "../../"
+  source            = "../../"
+  name              = "mariadb"
+  engine            = "MariaDB"
+  engine_version    = "10.6.10"
+  instance_class    = "db.m5.large"
+  engine_name       = "MariaDB"
+  allocated_storage = 50
+  storage_encrypted = true
 
   name              = "mariadb"
   environment       = "test22"
