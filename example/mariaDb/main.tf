@@ -29,7 +29,7 @@ module "mariadb" {
   instance_class    = "db.m5.large"
   engine_name       = "MariaDB"
   allocated_storage = 50
-
+  storage_encrypted = true
   db_name     = "test"
   db_username = "user"
   port        = "3306"

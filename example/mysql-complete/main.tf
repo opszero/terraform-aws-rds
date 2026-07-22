@@ -30,6 +30,7 @@ module "mysql" {
   engine_version    = "8.0.28"
   instance_class    = "db.m6i.xlarge"
   allocated_storage = 5
+  storage_encrypted = true
 
 
   vpc_id        = module.vpc.vpc_id
