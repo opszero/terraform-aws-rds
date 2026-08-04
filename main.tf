@@ -38,7 +38,7 @@ resource "aws_db_option_group" "this" {
   name                     = var.name
   option_group_description = local.description
   engine_name              = var.engine_name
-  engine_version           = var.engine_version
+  major_engine_version     = var.engine_version
   dynamic "option" {
     for_each = var.options
     content {
