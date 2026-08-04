@@ -54,8 +54,6 @@ module "mysql" {
 
   family = "mysql8.0"
 
-  major_engine_version = "8.0"
-
   deletion_protection = true
 
   parameters = [

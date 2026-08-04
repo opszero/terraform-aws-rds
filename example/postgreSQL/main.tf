@@ -55,8 +55,6 @@ module "postgresql" {
   subnet_ids          = module.private_subnets.public_subnet_id
   publicly_accessible = true
 
-  major_engine_version = "14"
-
   deletion_protection = true
 
 

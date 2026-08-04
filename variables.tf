@@ -319,12 +319,6 @@ variable "engine_name" {
   description = "Specifies the name of the engine that this option group should be associated with"
 }
 
-variable "major_engine_version" {
-  type        = string
-  default     = null
-  description = "Specifies the major version of the engine that this option group should be associated with"
-}
-
 variable "options" {
   type        = any
   default     = []

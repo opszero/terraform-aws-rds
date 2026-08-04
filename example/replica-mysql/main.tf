@@ -34,7 +34,7 @@ module "mysql" {
   snapshot_identifier    = ""
   kms_key_id             = ""
   enabled_read_replica   = true
-  storage_encrypted = true
+  storage_encrypted      = true
 
   db_name     = "replica"
   db_username = "replica_mysql"
@@ -58,7 +58,6 @@ module "mysql" {
 
   family = "mysql8.0"
 
-  major_engine_version       = "8.0"
   auto_minor_version_upgrade = false
 
   deletion_protection = true

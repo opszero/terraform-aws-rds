@@ -30,9 +30,9 @@ module "mariadb" {
   engine_name       = "MariaDB"
   allocated_storage = 50
   storage_encrypted = true
-  db_name     = "test"
-  db_username = "user"
-  port        = "3306"
+  db_name           = "test"
+  db_username       = "user"
+  port              = "3306"
 
   maintenance_window = "Mon:00:00-Mon:03:00"
   backup_window      = "03:00-06:00"
@@ -51,8 +51,6 @@ module "mariadb" {
 
   subnet_ids          = module.private_subnets.public_subnet_id
   publicly_accessible = true
-
-  major_engine_version = "10.6"
 
   deletion_protection = true
 

@@ -55,8 +55,6 @@ module "oracle" {
   subnet_ids          = module.private_subnets.public_subnet_id
   publicly_accessible = true
 
-  major_engine_version = "19"
-
   deletion_protection                 = true
   iam_database_authentication_enabled = false
 
